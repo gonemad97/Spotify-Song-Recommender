@@ -20,6 +20,6 @@ token = util.prompt_for_user_token(username, scope, client_id=SPOTIPY_CLIENT_ID,
                                    redirect_uri=SPOTIPY_REDIRECT_URI)
 if token:
     sp = spotipy.Spotify(auth=token)
-    print("Success")
+    print(sp)
 else:
     print("Can't get token for", username)

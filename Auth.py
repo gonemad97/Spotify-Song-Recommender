@@ -6,8 +6,8 @@ class Auth(object):
 
     def spotify_auth(self,SPOTIPY_CLIENT_ID,SPOTIPY_CLIENT_SECRET,SPOTIPY_REDIRECT_URI,username):
 
-        client_credentials_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
-        #sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+        # client_credentials_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
+        # sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
         scope = 'user-library-read playlist-read-private playlist-modify-public playlist-modify-private'
         token = util.prompt_for_user_token(username, scope,client_id=SPOTIPY_CLIENT_ID,
@@ -15,7 +15,8 @@ class Auth(object):
                                            redirect_uri=SPOTIPY_REDIRECT_URI)
         if token:
             sp = spotipy.Spotify(auth=token)
-            print("Success")
+            #return sp
+            print(sp)
         else:
             print("Can't get token for", username)
 
