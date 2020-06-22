@@ -31,15 +31,17 @@ class Auth(object):
         else:
             print("Can't get token for", cred_list[3])
 
-    song_info = {}
+
     def store_tracks(self,tracks):
         global song_info
-        song_info = {}
-        for item in tracks["items"]:
-            #print(item["track"]["id"])
-            track = item["track"]
-            song_info[item["track"]["id"]] = {track["name"]:track["artists"][0]["name"]}
-        return song_info
+        # song_info = {}
+        if 'song_info' not in globals():
+            song_info = {}
+            for item in tracks["items"]:
+                #print(item["track"]["id"])
+                track = item["track"]
+                song_info[item["track"]["id"]] = {track["name"]:track["artists"][0]["name"]}
+        #return song_info
 
     def discoverWeelySongs_testset(self):
 
@@ -60,4 +62,5 @@ class Auth(object):
 
 x = Auth()
 #print(x.spotify_auth('a14eee1e6e4e42d49ca37e9f33776d02','a3f8bc5b5e044aa2be61ef505b870319','http://localhost:8909/',"palsmadhu"))
-print(x.discoverWeelySongs_testset())
+x.discoverWeelySongs_testset()
+print(song_info)
