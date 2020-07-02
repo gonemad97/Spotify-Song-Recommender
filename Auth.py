@@ -3,6 +3,7 @@ import spotipy
 import spotipy.util as util
 from itertools import islice
 import math
+import pandas as pd
 
 class Auth(object):
 
@@ -105,11 +106,12 @@ class Auth(object):
         # return len(all_tracks)
         #-----
         track_deets=[]
+        a = {}
         track = sp.track("4P6IttK2PRBjyr3fm0pP7t")
-        print(track)
-        # res = {track["name"],track["artists"]["name"]}
-        # track_deets.append(res)
-        # return track_deets
+        #print(track["album"]["artists"][0]["name"])
+        res = {track["name"],track["album"]["artists"][0]["name"]}
+        track_deets.append(res)
+        return track_deets
 
 
     def show_tracks(self,results,uriArray):
@@ -188,10 +190,21 @@ class Auth(object):
             audio_features_sets.append(res)
         return audio_features_sets
 
-    def get_track_details(self,audio_feature_sets):
+    #final information holding track info and audio features for creating dataset
+    def get_track_details(self,playlists):
         sp = self.spotify_auth()
-        for set in audio_feature_sets:
-            track = sp.track(set["id"])
+        track_details = []
+        audio_feature_sets = self.get_audio_features(playlists)
+        for i in audio_feature_sets:
+            track = sp.track(i["id"])
+            i["name"] = track["name"]
+            i["artist"] = track["album"]["artists"][0]["name"]
+            track_details.append(i)
+        return track_details
+
+    def create_dataset(self,playlists):
+        track_records = self.get_track_details(playlists)
+        return pd.DataFrame(track_records)
 
 
 
@@ -233,5 +246,7 @@ x = Auth()
 #print(x.get_audio_features())
 #print(x.get_playlist_track_id("1J6BEsUM7AI8YkgIaXi5rx"))
 #print(x.get_all_track_ids(playlists))
-print(x.get_audio_features(playlists))
-print(x.blah())
+#print(x.get_audio_features(playlists))
+#print(x.blah())
+#print(x.get_track_details(playlists))
+print(x.create_dataset(playlists))
