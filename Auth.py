@@ -32,28 +32,6 @@ class Auth(object):
         else:
             print("Can't get token for", cred_list[3])
 
-    # def store_tracks(self,tracks):
-    #     global song_info
-    #     # song_info = {}
-    #     if 'song_info' not in globals():
-    #         song_info = {}
-    #         for item in tracks["items"]:
-    #             #print(item["track"]["id"])
-    #             track = item["track"]
-    #             song_info[item["track"]["id"]] = {track["name"]:track["artists"][0]["name"]}
-    #     #return song_info
-
-    # def discoverWeelySongs_testset(self):
-    #
-    #     sp = self.spotify_auth()
-    #     playlists = sp.current_user_playlists()
-    #     for playlist in playlists['items']:
-    #         #print(playlist['name'])
-    #         if playlist['name'] == "Discover Weekly":
-    #             results = sp.playlist(playlist['id'],
-    #                                   fields="tracks")
-    #             tracks = results['tracks']
-    #             return self.store_tracks(tracks)
 
     def get_playlist_id(self, playlists):
         playlist_ids = []
@@ -61,57 +39,11 @@ class Auth(object):
             playlist_ids.append(playlist[17:])
         return playlist_ids
 
-    def blah(self):
-        sp = self.spotify_auth()
-        # # tracks = self.get_playlist_tracks()
-        # all_tracks = []
-        # all_track_ids = []
-        # # results = sp.audio_features("047XkWonvB0lGLiLlyrnCc")
-        # # audio_features.extend(results)
-        # # return audio_features
-        # results = sp.playlist_tracks("1J6BEsUM7AI8YkgIaXi5rx")
-        # tracks = results['items']
-        # # track_ids = results['items'][0]["track"]["name"]
-        # #all_track_ids = [track_ids]
-        # #print(track_ids)
-        #
-        # # Loops to ensure I get every track of the playlist
-        # while results['next']:
-        #     results = sp.next(results)
-        #     tracks.extend(results['items'])
-        #     # ids = results['items'][0]["track"]["name"]
-        #     # print(ids)
-        #     #all_track_ids.extend(results['items'])
-        # all_tracks.extend(tracks)
-        # return len(all_tracks)
-        # ------
-        # sp = self.spotify_auth()
-        # playlist_ids = ["1J6BEsUM7AI8YkgIaXi5rx","37i9dQZF1EjwK8Xn0m0FOk"]
-        # all_tracks = []
-        # for id in playlist_ids:
-        #     print("...")
-        #     results = sp.playlist_tracks(id)
-        #     tracks = results['items']
-        #
-        #     # Loops to ensure I get every track of the playlist
-        #     while results['next']:
-        #         results = sp.next(results)
-        #         tracks.extend(results['items'])
-        #     all_tracks.extend(tracks)
-        # return len(all_tracks)
-        # -----
-        track_deets = []
-        a = {}
-        track = sp.track("4P6IttK2PRBjyr3fm0pP7t")
-        # print(track["album"]["artists"][0]["name"])
-        res = {track["name"], track["album"]["artists"][0]["name"]}
-        track_deets.append(res)
-        return track_deets
-
     def show_tracks(self, results, uriArray):
         for i, item in enumerate(results["items"]):
-            track = item["track"]
-            uriArray.append(track["id"])
+            if item["track"]:
+                track = item["track"]
+                uriArray.append(track["id"])
 
     def get_playlist_track_id(self, playlist_id):
         sp = self.spotify_auth()
@@ -124,7 +56,6 @@ class Auth(object):
             self.show_tracks(tracks, trackId)
         return set(trackId)
 
-    # dataset creation
     def get_playlist_tracks(self):
         sp = self.spotify_auth()
         playlist_ids = self.get_playlist_id(playlists)
@@ -201,9 +132,11 @@ class Auth(object):
             track_details.append(i)
         return track_details
 
+    #dataset creation
     def create_dataset(self, playlists):
         track_records = self.get_track_details(playlists)
-        return pd.DataFrame(track_records)
+        print(pd.DataFrame(track_records))
+        return pd.DataFrame(track_records).to_pickle("./spotify_dataset.pkl")
 
 
 playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSKuHP4d27SXO5fB9Wl",
