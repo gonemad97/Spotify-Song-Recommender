@@ -139,32 +139,32 @@ class Auth(object):
         return pd.DataFrame(track_records).to_pickle("./spotify_dataset.pkl")
 
 
-    #search for a track and get all its audio features to compare with clusters
-    def search_for_track(self,query):
-        sp = Auth.spotify_auth(self)
-        result = sp.search(query)
-        id = result["tracks"]["items"][0]["id"]
-        track = sp.track(id)
-        song_name = track["name"]
-        artist_name = track["album"]["artists"][0]["name"]
-
-        audio_features = sp.audio_features(tracks=[id])
-        res = {key: audio_features[0][key] for key in audio_features[0].keys() & {'danceability', 'energy', 'key',
-                                                          'loudness', 'mode', 'speechiness',
-                                                          'acousticness',
-                                                          'instrumentalness', 'liveness',
-                                                          'valence',
-                                                          'tempo', 'id'}}
-
-
-        track = sp.track(res["id"])
-        res["name"] = track["name"]
-        res["artist"] = track["album"]["artists"][0]["name"]
-        print(res)
-        new_track = []
-        new_track.append(res)
-        new_searched_song = pd.DataFrame(new_track)
-        pd.DataFrame(new_searched_song).to_pickle("./new_searched_track.pkl")
+    # #search for a track and get all its audio features to compare with clusters
+    # def search_for_track(self,query):
+    #     sp = Auth.spotify_auth(self)
+    #     result = sp.search(query)
+    #     id = result["tracks"]["items"][0]["id"]
+    #     track = sp.track(id)
+    #     song_name = track["name"]
+    #     artist_name = track["album"]["artists"][0]["name"]
+    #
+    #     audio_features = sp.audio_features(tracks=[id])
+    #     res = {key: audio_features[0][key] for key in audio_features[0].keys() & {'danceability', 'energy', 'key',
+    #                                                       'loudness', 'mode', 'speechiness',
+    #                                                       'acousticness',
+    #                                                       'instrumentalness', 'liveness',
+    #                                                       'valence',
+    #                                                       'tempo', 'id'}}
+    #
+    #
+    #     track = sp.track(res["id"])
+    #     res["name"] = track["name"]
+    #     res["artist"] = track["album"]["artists"][0]["name"]
+    #     print(res)
+    #     new_track = []
+    #     new_track.append(res)
+    #     new_searched_song = pd.DataFrame(new_track)
+    #     pd.DataFrame(new_searched_song).to_pickle("./new_searched_track.pkl")
         #return result
 
 

@@ -5,19 +5,20 @@ from itertools import islice
 import math
 import pandas as pd
 
+
 # this function must be changed to make it multi-user friendly later..maybe with Flask UI input?
-def creds(self):
+def creds():
     SPOTIPY_CLIENT_ID = "a14eee1e6e4e42d49ca37e9f33776d02"
     SPOTIPY_CLIENT_SECRET = "a3f8bc5b5e044aa2be61ef505b870319"
     SPOTIPY_REDIRECT_URI = "http://localhost:8909/"
     username = "palsmadhu"
     return [SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, username]
 
-def spotify_auth(self):
 
+def spotify_auth():
     # client_credentials_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
     # sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-    cred_list = self.creds()
+    cred_list = creds()
     scope = 'user-library-read playlist-read-private playlist-modify-public playlist-modify-private'
     token = util.prompt_for_user_token(cred_list[3], scope, client_id=cred_list[0],
                                        client_secret=cred_list[1],
@@ -30,32 +31,35 @@ def spotify_auth(self):
         print("Can't get token for", cred_list[3])
 
 
-def get_playlist_id(self, playlists):
+def get_playlist_id(playlists):
     playlist_ids = []
     for playlist in playlists:
         playlist_ids.append(playlist[17:])
     return playlist_ids
 
-def show_tracks(self, results, uriArray):
+
+def show_tracks(results, uriArray):
     for i, item in enumerate(results["items"]):
         if item["track"]:
             track = item["track"]
             uriArray.append(track["id"])
 
-def get_playlist_track_id(self, playlist_id):
-    sp = self.spotify_auth()
+
+def get_playlist_track_id( playlist_id):
+    sp = spotify_auth()
     trackId = []
     results = sp.playlist(playlist_id)
     tracks = results["tracks"]
-    self.show_tracks(tracks, trackId)
+    show_tracks(tracks, trackId)
     while tracks["next"]:
         tracks = sp.next(tracks)
-        self.show_tracks(tracks, trackId)
+        show_tracks(tracks, trackId)
     return set(trackId)
 
-def get_playlist_tracks(self):
-    sp = self.spotify_auth()
-    playlist_ids = self.get_playlist_id(playlists)
+
+def get_playlist_tracks():
+    sp = spotify_auth()
+    playlist_ids = get_playlist_id(playlists)
     all_tracks = []
     for id in playlist_ids:
         print("...")
@@ -69,15 +73,17 @@ def get_playlist_tracks(self):
         all_tracks.extend(tracks)
     return set(all_tracks)
 
-def get_all_track_ids(self, playlists):
+
+def get_all_track_ids( playlists):
     # sp = self.spotify_auth()
     track_ids = []
-    all_playlist_ids = self.get_playlist_id(playlists)
+    all_playlist_ids = get_playlist_id(playlists)
     for playlist_id in all_playlist_ids:
-        track_ids += self.get_playlist_track_id(playlist_id)
+        track_ids += get_playlist_track_id(playlist_id)
     return track_ids
 
-def split_calc(self, tracks, noOfTracks):
+
+def split_calc( tracks, noOfTracks):
     if noOfTracks % 100 != 0:
         last = noOfTracks % 100
         split_list = [100] * (math.floor(noOfTracks / 100))
@@ -91,10 +97,11 @@ def split_calc(self, tracks, noOfTracks):
 
     return Output
 
-def get_audio_features(self, playlists):
-    sp = self.spotify_auth()
-    tracks = self.get_all_track_ids(playlists)
-    tracks_split = self.split_calc(tracks, len(tracks))
+
+def get_audio_features(playlists):
+    sp = spotify_auth()
+    tracks = get_all_track_ids(playlists)
+    tracks_split = split_calc(tracks, len(tracks))
 
     audio_features = []
     for track_set in tracks_split:
@@ -114,14 +121,14 @@ def get_audio_features(self, playlists):
                                                                   'tempo', 'id'}}
                 audio_features_sets.append(res)
 
-
     return audio_features_sets
 
+
 # final information holding track info and audio features for creating dataset
-def get_track_details(self, playlists):
-    sp = self.spotify_auth()
+def get_track_details(playlists):
+    sp = spotify_auth()
     track_details = []
-    audio_feature_sets = self.get_audio_features(playlists)
+    audio_feature_sets = get_audio_features(playlists)
     for i in audio_feature_sets:
         track = sp.track(i["id"])
         i["name"] = track["name"]
@@ -129,16 +136,17 @@ def get_track_details(self, playlists):
         track_details.append(i)
     return track_details
 
-#dataset creation
-def create_dataset(self, playlists):
-    track_records = self.get_track_details(playlists)
+
+# dataset creation
+def create_dataset(playlists):
+    track_records = get_track_details(playlists)
     print(pd.DataFrame(track_records))
     return pd.DataFrame(track_records).to_pickle("./spotify_dataset.pkl")
 
 
-#search for a track and get all its audio features to compare with clusters
-def search_for_track(self,query):
-    sp = spotify_auth(self)
+# search for a track and get all its audio features to compare with clusters
+def search_for_track(query):
+    sp = spotify_auth()
     result = sp.search(query)
     id = result["tracks"]["items"][0]["id"]
     track = sp.track(id)
@@ -146,13 +154,13 @@ def search_for_track(self,query):
     artist_name = track["album"]["artists"][0]["name"]
 
     audio_features = sp.audio_features(tracks=[id])
-    res = {key: audio_features[0][key] for key in audio_features[0].keys() & {'danceability', 'energy', 'key',
-                                                                              'loudness', 'mode', 'speechiness',
-                                                                              'acousticness',
-                                                                              'instrumentalness', 'liveness',
-                                                                              'valence',
-                                                                              'tempo', 'id'}}
-
+    res = {key: audio_features[0][key] for key in
+           audio_features[0].keys() & {'danceability', 'energy', 'key',
+                                       'loudness', 'mode', 'speechiness',
+                                       'acousticness',
+                                       'instrumentalness', 'liveness',
+                                       'valence',
+                                       'tempo', 'id'}}
 
     track = sp.track(res["id"])
     res["name"] = track["name"]
@@ -162,8 +170,7 @@ def search_for_track(self,query):
     new_track.append(res)
     new_searched_song = pd.DataFrame(new_track)
     pd.DataFrame(new_searched_song).to_pickle("./new_searched_track.pkl")
-    #return result
-
+    # return result
 
 
 playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSKuHP4d27SXO5fB9Wl",
@@ -202,9 +209,9 @@ playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSK
 # print(x.get_audio_features())
 # print(x.get_playlist_track_id("1J6BEsUM7AI8YkgIaXi5rx"))
 # print(x.get_all_track_ids(playlists))
-#print(x.get_audio_features(playlists))
+# print(x.get_audio_features(playlists))
 # print(x.blah())
-#print(x.get_track_details(playlists))
-#print(x.create_dataset(playlists))
+# print(x.get_track_details(playlists))
+# print(x.create_dataset(playlists))
 
 print(search_for_track("artist:Selena Gomez track:Look At Her Now"))
