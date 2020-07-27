@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>Search Query</title>
+</head>
+<style>
+    body {background-image : url('/static/img/gradient_green.png')}
+    p {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+    input[type=submit] {background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-decoration: none;
+        font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace;
+        font-size: 20px;
+        margin: 4px 2px;
+        cursor: pointer;}
+
+    input[type=submit]:hover {background-color: darkgreen}
+    .search-elements {text-align: center; position: absolute;
+        top:  50%;
+        left: 53%;
+        transform: translate(-50%,-50%);}
+
+    h1 {position: absolute;
+        top:  20%;
+        left: 53%;
+        transform: translate(-50%,-50%);
+        color: ghostwhite;
+        font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace;
+        white-space: nowrap;
+        }
+
+    h3 {position: absolute;
+        top:  15%;
+        left: 53%;
+        transform: translate(-50%,-50%);
+        color: ghostwhite;
+        font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace;
+        white-space: nowrap;
+    }
+
+    textarea {
+        width: 300px;
+        height: 100px;
+    }
+
+    body {
+        height:100%;
+        background-position: center;
+        background-repeat: initial;
+        background-size: cover;
+    }
+
+</style>
+<body>
+<h1> Search for a Song </h1>
+<h3> Enter Artist name followed by Song Title</h3>
+<div class = "search-elements">
+
+<form action="/success" method="post" enctype="multipart/form-data">
+    <p>Enter Query:</p>
+    <textarea type="text" name="text" onfocus="clearContents(this);"></textarea>
+    <br>
+    <br>
+    <input type = "submit" value="Submit" >
+
+</form>
+</div>
+<script>
+    function clearContents(element) {
+        element.value = '';
+    }
+</script>
+</body>
+</html>

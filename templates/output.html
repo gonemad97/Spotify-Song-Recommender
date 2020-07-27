@@ -1,0 +1,83 @@
+<html>
+<head>
+    <title>Output</title>
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/materialize.min.css') }}" type="text/css" rel="stylesheet"
+          media="screen,projection"/>
+    <link href="{{ url_for('static',filename='css/style.css') }}" type="text/css" rel="stylesheet"
+          media="screen,projection"/>
+</head>
+<style>
+    body {
+        background-image : url('/static/img/gradient_purple.png');
+        height:100%;
+        background-position: center;
+        background-repeat: initial;
+        background-size: cover;
+    }
+
+    h4 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+    h2 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+    h1 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+    p {text-align: justify;
+        top:  50%;
+        left: 50%;
+        /*transform: translate(-50%,-50%);*/
+        color: ghostwhite;
+        font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+
+    button {background-color: #4CAF50;
+        position: absolute;
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-decoration: none;
+        font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace;
+        font-size: 20px;
+        margin: 4px 2px;
+        cursor: pointer;}
+    button:hover {background-color: darkgreen}
+
+    .wrapper {
+        text-align: center;
+        position: absolute;
+        left: 45%;
+        ;
+    }
+    table.dataframe, .dataframe th, .dataframe td {
+        border: none;
+        border-bottom: 1px solid #C8C8C8;
+        border-collapse: collapse;
+        text-align:left;
+        padding: 10px;
+        margin-bottom: 40px;
+        font-size: 0.9em;
+    }
+    tr:nth-child(odd)		{ background-color:#eee; }
+    tr:nth-child(even)	{ background-color:#fff; }
+
+    tr:hover            { background-color: #ffff99;}
+
+</style>
+<!--<body background="/Users/madhuripalanivelu/Documents/IDEs_Code_and_Workspaces/eclipse-workspace/Espy Weekly/images/gradient_green.png">-->
+<script>
+    function goBack() {
+        window.history.go(-1);
+    }
+</script>
+<h4>Top 10 Songs Similar to Your Song:</h4>
+<br>
+<div class=page>
+    {% for table in tables %}
+    <h2>{{titles[loop.index]}}</h2>
+    {{ table|safe }}
+    {% endfor %}
+</div>
+<br>
+
+<div class = "wrapper">
+    <button onclick="goBack()">Search Again</button>
+</div>
+</body>
+</html>
