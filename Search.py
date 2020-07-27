@@ -69,7 +69,13 @@ def find_new_track_cluster_songs(query):
     related_songs = clustered_songs[clustered_songs["Segment KMeans PCA"] == track_cluster[0]]
     return related_songs.head(10)
 
+def display_songs(query):
+    song_list = find_new_track_cluster_songs(query).iloc[:, : 3]
+    return song_list
+
+
 
 
 #search_for_track("artist:Selena Gomez track:Look At Her Now")
-print(find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))
+
+print(display_songs("artist:Selena Gomez track:Look At Her Now"))
