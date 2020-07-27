@@ -74,7 +74,7 @@ def find_new_track_cluster_songs(query):
 
         # 10 songs in same cluster
         related_songs = clustered_songs[clustered_songs["Segment KMeans PCA"] == track_cluster[0]]
-        return related_songs.head(10)
+        return related_songs.head(30)
     except:
         return None
 

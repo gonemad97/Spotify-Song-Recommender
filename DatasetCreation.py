@@ -169,7 +169,7 @@ def search_for_track(query):
     new_track = []
     new_track.append(res)
     new_searched_song = pd.DataFrame(new_track)
-    pd.DataFrame(new_searched_song).to_pickle("./new_searched_track.pkl")
+    pd.DataFrame(new_searched_song).to_pickle("./new_searched_track4.pkl")
     # return result
 
 
@@ -214,4 +214,4 @@ playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSK
 # print(x.get_track_details(playlists))
 # print(x.create_dataset(playlists))
 
-print(search_for_track("artist:Selena Gomez track:Look At Her Now"))
+print(search_for_track("artist:Doja Cat track:Say so"))
