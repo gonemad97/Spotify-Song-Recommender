@@ -9,5 +9,5 @@ WORKDIR /opt/api
 COPY . /opt/api
 
 EXPOSE 5000
-
+ENV FLASK_ENV="docker"
 CMD ["python3","webapp.py"]
