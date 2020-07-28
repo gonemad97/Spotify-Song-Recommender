@@ -18,7 +18,7 @@
     }
 
     h4 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
-    h2 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
+    h3 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
     h1 {color: ghostwhite;font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace}
     p {text-align: justify;
         top:  50%;
@@ -66,11 +66,10 @@
         window.history.go(-1);
     }
 </script>
-<h4>Top 10 Songs Similar to Your Song:</h4>
 <br>
 <div class=page>
     {% for table in tables %}
-    <h2>{{titles[loop.index]}}</h2>
+    <h3>{{titles[loop.index]}}</h3>
     {{ table|safe }}
     {% endfor %}
 </div>

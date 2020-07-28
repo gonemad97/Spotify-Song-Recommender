@@ -40,7 +40,7 @@ def pca_kmeans():
     PCA_components = pd.DataFrame(principalComponents)
 
     # Kmeans with 3 clusters based on elbow method
-    model = KMeans(n_clusters=2)
+    model = KMeans(n_clusters=3)
     model.fit(PCA_components.iloc[:, :2])
 
     # adding cluster and component columns to the dataset
@@ -50,7 +50,7 @@ def pca_kmeans():
     #                                    "Component 9", "Component 10", "Component 11"]
     segm_kmeans["Segment KMeans PCA"] = model.labels_
     segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"].map(
-        {0: "Cluster 1", 1: "Cluster 2"})
+        {0: "Cluster 1", 1: "Cluster 2",2:"Cluster 3"})
 
     return pca, model, segm_kmeans
 

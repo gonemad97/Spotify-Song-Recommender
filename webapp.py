@@ -17,7 +17,7 @@ def top_k():
         similar_songs = Search.display_songs("artist:" + artist_name + " " + "track:" + song_name)
 
     return render_template('output.html',tables=[similar_songs.to_html()],
-                           titles = ['na', "Similar songs"])
+                           titles = ['na', " Songs Similar to "+song_name.title()+" by "+artist_name.title()])
 
 
 if __name__ == '__main__':

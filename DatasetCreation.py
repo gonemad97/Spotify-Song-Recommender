@@ -137,11 +137,29 @@ def get_track_details(playlists):
     return track_details
 
 
+def playlist_creation_from_category():
+    sp = spotify_auth()
+    browse_categories = ["hiphop","summer","pop","country","workout","latin","mood","rock","rnb",
+                         "blackhistorymonth","edm_dance","rnb","gaming","focus","chill","at_home",
+                         "indie_alt","inspirational","decades","alternative","wellness","pride","party",
+                         "sleep","classical","jazz","roots","soul","dinner","romance","kpop","punk",
+                         "regionalmexican","sessions","popculture","arab","desi","anime","afro",
+                         "metal","reggae","blues","funk","student","family","travel"]
+    playlists = set()
+    for category in browse_categories:
+        category_playlists = sp.category_playlists(category,limit=50)
+        for playlist in range(len(category_playlists["playlists"]["items"])):
+            playlists.add("spotify:playlist:"+category_playlists["playlists"]["items"][playlist]["id"])
+
+    #around 1462 playlists
+    return list(playlists)
+
 # dataset creation
-def create_dataset(playlists):
+def create_dataset():
+    playlists = playlist_creation_from_category()
     track_records = get_track_details(playlists)
     print(pd.DataFrame(track_records))
-    return pd.DataFrame(track_records).to_pickle("./spotify_dataset.pkl")
+    return pd.DataFrame(track_records).to_pickle("./spotify_dataset_new.pkl")
 
 
 # search for a track and get all its audio features to compare with clusters
@@ -171,6 +189,7 @@ def search_for_track(query):
     new_searched_song = pd.DataFrame(new_track)
     pd.DataFrame(new_searched_song).to_pickle("./new_searched_track8.pkl")
     # return result
+
 
 
 playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSKuHP4d27SXO5fB9Wl",
@@ -214,4 +233,6 @@ playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSK
 # print(x.get_track_details(playlists))
 # print(x.create_dataset(playlists))
 
-print(search_for_track("artist:Toosii track:Truth Be Told"))
+#print(search_for_track("artist:Toosii track:Truth Be Told"))
+#print(playlist_creation_from_category())
+create_dataset()
