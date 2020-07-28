@@ -3,10 +3,12 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+import sklearn
 
+# print('The scikit-learn version is {}.'.format(pd.__version__))
 
 def unload():
-    with open('spotify_dataset.pkl', 'rb') as f:
+    with open('spotify_dataset_new.pkl', 'rb') as f:
         data = pickle.load(f)
         data_reordered = data[['id',
                                'name',
@@ -40,21 +42,19 @@ def pca_kmeans():
     PCA_components = pd.DataFrame(principalComponents)
 
     # Kmeans with 3 clusters based on elbow method
-    model = KMeans(n_clusters=3)
+    model = KMeans(n_clusters=5)
     model.fit(PCA_components.iloc[:, :2])
 
     # adding cluster and component columns to the dataset
     segm_kmeans = pd.concat([full_dataset.reset_index(drop=True)], axis=1)
-    #segm_kmeans.columns.values[-11:] = ["Component 1", "Component 2", "Component 3", "Component 4",
-    #                                    "Component 5", "Component 6", "Component 7", "Component 8",
-    #                                    "Component 9", "Component 10", "Component 11"]
+
     segm_kmeans["Segment KMeans PCA"] = model.labels_
-    segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"].map(
-        {0: "Cluster 1", 1: "Cluster 2",2:"Cluster 3"})
+    segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"]\
+        .map({0: "Cluster 1", 1: "Cluster 2", 2: "Cluster 3", 3: "Cluster 4", 4: "Cluster 5"})
 
     return pca, model, segm_kmeans
 
 
 # calling methods here for testing
-print(unload())
-print(pca_kmeans())
+# print(unload())
+# print(pca_kmeans())

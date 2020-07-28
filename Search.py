@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 def search_for_track(query):
     sp = dc.spotify_auth()
     result = sp.search(query)
-    print(result)
+    # print(result)
     # if song exists
     try:
         track_id = result["tracks"]["items"][0]["id"]
@@ -93,5 +93,5 @@ def display_songs(query):
 #print("looooooooool", search_for_track("artist:selena Gomz track:Look  Her Now"))
 #print("leeeeeeeeeel",find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))
 # print("leeeeeeeeeel",search_for_track("artist:Selena Gomez track:Look At Her Now"))
-print("leeeeeeeeeel",display_songs("artist:Selena Gomez track:Look At Her Now"))
+#print("leeeeeeeeeel",display_songs("artist:Selena Gomez track:Look At Her Now"))
 #print("leeeeeeeeeel",find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))

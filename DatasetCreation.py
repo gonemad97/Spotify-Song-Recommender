@@ -1,5 +1,4 @@
 import spotipy
-
 import spotipy.util as util
 from itertools import islice
 import math
@@ -31,7 +30,8 @@ def spotify_auth():
         print("Can't get token for", cred_list[3])
 
 
-def get_playlist_id(playlists):
+def get_playlist_id():
+    playlists = playlist_creation_from_category()
     playlist_ids = []
     for playlist in playlists:
         playlist_ids.append(playlist[17:])
@@ -58,10 +58,12 @@ def get_playlist_track_id( playlist_id):
 
 
 def get_playlist_tracks():
-    sp = spotify_auth()
-    playlist_ids = get_playlist_id(playlists)
+    # sp = spotify_auth()
+    # playlists = playlist_creation_from_category()
+    playlist_ids = get_playlist_id()
     all_tracks = []
     for id in playlist_ids:
+        sp = spotify_auth()
         print("...")
         results = sp.playlist_tracks(id)
         tracks = results['items']
@@ -74,10 +76,11 @@ def get_playlist_tracks():
     return set(all_tracks)
 
 
-def get_all_track_ids( playlists):
+def get_all_track_ids():
     # sp = self.spotify_auth()
     track_ids = []
-    all_playlist_ids = get_playlist_id(playlists)
+    # playlists = playlist_creation_from_category()
+    all_playlist_ids = get_playlist_id()
     for playlist_id in all_playlist_ids:
         track_ids += get_playlist_track_id(playlist_id)
     return track_ids
@@ -98,13 +101,15 @@ def split_calc( tracks, noOfTracks):
     return Output
 
 
-def get_audio_features(playlists):
-    sp = spotify_auth()
-    tracks = get_all_track_ids(playlists)
+def get_audio_features():
+    # playlists = playlist_creation_from_category()
+    # sp = spotify_auth()
+    tracks = get_all_track_ids()
     tracks_split = split_calc(tracks, len(tracks))
 
     audio_features = []
     for track_set in tracks_split:
+        sp = spotify_auth()
         results = sp.audio_features(track_set)
         audio_features.append(results)
 
@@ -125,11 +130,12 @@ def get_audio_features(playlists):
 
 
 # final information holding track info and audio features for creating dataset
-def get_track_details(playlists):
-    sp = spotify_auth()
+def get_track_details():
+    # sp = spotify_auth()
     track_details = []
-    audio_feature_sets = get_audio_features(playlists)
+    audio_feature_sets = get_audio_features()
     for i in audio_feature_sets:
+        sp = spotify_auth()
         track = sp.track(i["id"])
         i["name"] = track["name"]
         i["artist"] = track["album"]["artists"][0]["name"]
@@ -138,7 +144,6 @@ def get_track_details(playlists):
 
 
 def playlist_creation_from_category():
-    sp = spotify_auth()
     browse_categories = ["hiphop","summer","pop","country","workout","latin","mood","rock","rnb",
                          "blackhistorymonth","edm_dance","rnb","gaming","focus","chill","at_home",
                          "indie_alt","inspirational","decades","alternative","wellness","pride","party",
@@ -147,6 +152,7 @@ def playlist_creation_from_category():
                          "metal","reggae","blues","funk","student","family","travel"]
     playlists = set()
     for category in browse_categories:
+        sp = spotify_auth()
         category_playlists = sp.category_playlists(category,limit=50)
         for playlist in range(len(category_playlists["playlists"]["items"])):
             playlists.add("spotify:playlist:"+category_playlists["playlists"]["items"][playlist]["id"])
@@ -156,9 +162,9 @@ def playlist_creation_from_category():
 
 # dataset creation
 def create_dataset():
-    playlists = playlist_creation_from_category()
-    track_records = get_track_details(playlists)
-    print(pd.DataFrame(track_records))
+    # playlists = playlist_creation_from_category()
+    track_records = get_track_details()
+    # print(pd.DataFrame(track_records))
     return pd.DataFrame(track_records).to_pickle("./spotify_dataset_new.pkl")
 
 
@@ -183,7 +189,7 @@ def search_for_track(query):
     track = sp.track(res["id"])
     res["name"] = track["name"]
     res["artist"] = track["album"]["artists"][0]["name"]
-    print(res)
+    # print(res)
     new_track = []
     new_track.append(res)
     new_searched_song = pd.DataFrame(new_track)
@@ -192,33 +198,33 @@ def search_for_track(query):
 
 
 
-playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSKuHP4d27SXO5fB9Wl",
-             "spotify:playlist:5Xtj5QwZG7WzDY1C5wozcL", "spotify:playlist:37i9dQZF1DWWqNV5cS50j6",
-             "spotify:playlist:37i9dQZF1DX4JAvHpjipBk", "spotify:playlist:6fO3gSb2WXw6hgqY7nDe2C",
-             "spotify:playlist:37i9dQZF1DXcWxeqLvgOCi", "spotify:playlist:65xSncKQzG6Suseh5gfYP1",
-             "spotify:playlist:37i9dQZF1DXc8kgYqQLMfH", "spotify:playlist:37i9dQZF1DWWjGdmeTyeJ6",
-             "spotify:playlist:37i9dQZF1DX6mMeq1VVekF", "spotify:playlist:37i9dQZF1DXcxvFzl58uP7",
-             "spotify:playlist:37i9dQZF1DX1YPTAhwehsC", "spotify:playlist:37i9dQZF1DX0XUsuxWHRQd",
-             "spotify:playlist:37i9dQZF1DWVV27DiNWxkR", "spotify:playlist:37i9dQZF1DWT6MhXz0jw61",
-             "spotify:playlist:37i9dQZF1DWVA1Gq4XHa6U", "spotify:playlist:37i9dQZF1DWWBHeXOYZf74",
-             "spotify:playlist:37i9dQZF1DWVzZlRWgqAGH", "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M",
-             "spotify:playlist:37i9dQZF1DWUa8ZRTfalHk", "spotify:playlist:37i9dQZF1DX5gQonLbZD9s",
-             "spotify:playlist:37i9dQZF1DXbYM3nMM0oPk", "spotify:playlist:37i9dQZF1DWWvvyNmW9V9a",
-             "spotify:playlist:37i9dQZF1DWTwnEm1IYyoj", "spotify:playlist:37i9dQZF1DX1lVhptIYRda",
-             "spotify:playlist:37i9dQZF1DXbIbVYph0Zr5", "spotify:playlist:37i9dQZF1DX0bUGQdz5BJG",
-             "spotify:playlist:37i9dQZF1DWTkxQvqMy4WW", "spotify:playlist:37i9dQZF1DWYnwbYQ5HnZU",
-             "spotify:playlist:37i9dQZF1DXdxUH6sNtcDe", "spotify:playlist:37i9dQZF1DX1gRalH1mWrP",
-             "spotify:playlist:37i9dQZF1DXaTitkvoNNxt", "spotify:playlist:37i9dQZF1DX83I5je4W4rP",
-             "spotify:playlist:37i9dQZF1DX0SM0LYsmbMT", "spotify:playlist:37i9dQZF1DX3LyU0mhfqgP",
-             "spotify:playlist:37i9dQZF1DX59HcpGmPXYR", "spotify:playlist:37i9dQZF1DXcCnXtB0Pp0D",
-             "spotify:playlist:37i9dQZF1DX76Wlfdnj7AP", "spotify:playlist:37i9dQZF1DX4UtSsGT1Sbe",
-             "spotify:playlist:37i9dQZF1DX4o1oenSJRJd", "spotify:playlist:37i9dQZF1DWTJ7xPn4vNaz",
-             "spotify:playlist:37i9dQZF1DX1rVvRgjX59F", "spotify:playlist:37i9dQZF1DX5Ejj0EkURtP",
-             "spotify:playlist:37i9dQZF1DXbTxeAdrVG2l", "spotify:playlist:37i9dQZF1DX3rxVfibe1L0",
-             "spotify:playlist:37i9dQZF1DX4fpCWaHOned", "spotify:playlist:37i9dQZF1DX7KNKjOK0o75",
-             "spotify:playlist:37i9dQZF1DWSqmBTGDYngZ", "spotify:playlist:37i9dQZF1DX7gIoKXt0gmx",
-             "spotify:playlist:37i9dQZF1DX2UgsUIg75Vg", "spotify:playlist:37i9dQZF1DX10zKzsJ2jva",
-             "spotify:playlist:37i9dQZF1DX4WYpdgoIcn6", "spotify:playlist:37i9dQZF1DWWQRwui0ExPn"]
+# playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSKuHP4d27SXO5fB9Wl",
+#              "spotify:playlist:5Xtj5QwZG7WzDY1C5wozcL", "spotify:playlist:37i9dQZF1DWWqNV5cS50j6",
+#              "spotify:playlist:37i9dQZF1DX4JAvHpjipBk", "spotify:playlist:6fO3gSb2WXw6hgqY7nDe2C",
+#              "spotify:playlist:37i9dQZF1DXcWxeqLvgOCi", "spotify:playlist:65xSncKQzG6Suseh5gfYP1",
+#              "spotify:playlist:37i9dQZF1DXc8kgYqQLMfH", "spotify:playlist:37i9dQZF1DWWjGdmeTyeJ6",
+#              "spotify:playlist:37i9dQZF1DX6mMeq1VVekF", "spotify:playlist:37i9dQZF1DXcxvFzl58uP7",
+#              "spotify:playlist:37i9dQZF1DX1YPTAhwehsC", "spotify:playlist:37i9dQZF1DX0XUsuxWHRQd",
+#              "spotify:playlist:37i9dQZF1DWVV27DiNWxkR", "spotify:playlist:37i9dQZF1DWT6MhXz0jw61",
+#              "spotify:playlist:37i9dQZF1DWVA1Gq4XHa6U", "spotify:playlist:37i9dQZF1DWWBHeXOYZf74",
+#              "spotify:playlist:37i9dQZF1DWVzZlRWgqAGH", "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M",
+#              "spotify:playlist:37i9dQZF1DWUa8ZRTfalHk", "spotify:playlist:37i9dQZF1DX5gQonLbZD9s",
+#              "spotify:playlist:37i9dQZF1DXbYM3nMM0oPk", "spotify:playlist:37i9dQZF1DWWvvyNmW9V9a",
+#              "spotify:playlist:37i9dQZF1DWTwnEm1IYyoj", "spotify:playlist:37i9dQZF1DX1lVhptIYRda",
+#              "spotify:playlist:37i9dQZF1DXbIbVYph0Zr5", "spotify:playlist:37i9dQZF1DX0bUGQdz5BJG",
+#              "spotify:playlist:37i9dQZF1DWTkxQvqMy4WW", "spotify:playlist:37i9dQZF1DWYnwbYQ5HnZU",
+#              "spotify:playlist:37i9dQZF1DXdxUH6sNtcDe", "spotify:playlist:37i9dQZF1DX1gRalH1mWrP",
+#              "spotify:playlist:37i9dQZF1DXaTitkvoNNxt", "spotify:playlist:37i9dQZF1DX83I5je4W4rP",
+#              "spotify:playlist:37i9dQZF1DX0SM0LYsmbMT", "spotify:playlist:37i9dQZF1DX3LyU0mhfqgP",
+#              "spotify:playlist:37i9dQZF1DX59HcpGmPXYR", "spotify:playlist:37i9dQZF1DXcCnXtB0Pp0D",
+#              "spotify:playlist:37i9dQZF1DX76Wlfdnj7AP", "spotify:playlist:37i9dQZF1DX4UtSsGT1Sbe",
+#              "spotify:playlist:37i9dQZF1DX4o1oenSJRJd", "spotify:playlist:37i9dQZF1DWTJ7xPn4vNaz",
+#              "spotify:playlist:37i9dQZF1DX1rVvRgjX59F", "spotify:playlist:37i9dQZF1DX5Ejj0EkURtP",
+#              "spotify:playlist:37i9dQZF1DXbTxeAdrVG2l", "spotify:playlist:37i9dQZF1DX3rxVfibe1L0",
+#              "spotify:playlist:37i9dQZF1DX4fpCWaHOned", "spotify:playlist:37i9dQZF1DX7KNKjOK0o75",
+#              "spotify:playlist:37i9dQZF1DWSqmBTGDYngZ", "spotify:playlist:37i9dQZF1DX7gIoKXt0gmx",
+#              "spotify:playlist:37i9dQZF1DX2UgsUIg75Vg", "spotify:playlist:37i9dQZF1DX10zKzsJ2jva",
+#              "spotify:playlist:37i9dQZF1DX4WYpdgoIcn6", "spotify:playlist:37i9dQZF1DWWQRwui0ExPn"]
 
 # print(x.spotify_auth('a14eee1e6e4e42d49ca37e9f33776d02','a3f8bc5b5e044aa2be61ef505b870319','http://localhost:8909/',"palsmadhu"))
 # x.discoverWeelySongs_testset()
@@ -235,4 +241,6 @@ playlists = ["spotify:playlist:37i9dQZF1DX2RxBh64BHjQ", "spotify:playlist:5PKZSK
 
 #print(search_for_track("artist:Toosii track:Truth Be Told"))
 #print(playlist_creation_from_category())
-create_dataset()
+
+
+#create_dataset()
