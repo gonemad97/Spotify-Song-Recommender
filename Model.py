@@ -3,9 +3,6 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-import sklearn
-
-# print('The scikit-learn version is {}.'.format(pd.__version__))
 
 def unload():
     with open('spotify_dataset_new.pkl', 'rb') as f:
@@ -54,7 +51,3 @@ def pca_kmeans():
 
     return pca, model, segm_kmeans
 
-
-# calling methods here for testing
-# print(unload())
-# print(pca_kmeans())
