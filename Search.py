@@ -32,7 +32,7 @@ def search_for_track(query):
         new_track = []
         new_track.append(res)
         new_searched_song = pd.DataFrame(new_track)
-        # pd.DataFrame(new_searched_song).to_pickle("./new_searched_track.pkl")
+        pd.DataFrame(new_searched_song).to_pickle("./new_searched_track6.pkl")
         # to reorder features correctly
         searched_track = new_searched_song[['id',
                                             'name',
@@ -63,18 +63,19 @@ def find_new_track_cluster_songs(query):
     try:
         pca, model, clustered_songs = m.pca_kmeans()
         searched_track = search_for_track(query)
-        std_audio = StandardScaler().fit_transform(searched_track)  # normalizing the data
+        #std_audio = StandardScaler().fit_transform(searched_track)  # normalizing the data
 
         # predicting cluster for new track
-        principalComponents = pca.transform(std_audio)
+        principalComponents = pca.transform(searched_track)
         PCA_components = pd.DataFrame(principalComponents)
 
         # cluster number of the searched song
-        track_cluster = model.predict(PCA_components.iloc[:, :2])
+        track_cluster = model.predict(PCA_components)
 
         # 10 songs in same cluster
-        related_songs = clustered_songs[clustered_songs["Segment KMeans PCA"] == track_cluster[0]]
-        return related_songs.head(30)
+        cluster_songs = clustered_songs[clustered_songs["Segment KMeans PCA"] == track_cluster[0]]
+        related_songs = cluster_songs.sample(n=30)
+        return related_songs
     except:
         return None
 
@@ -95,3 +96,4 @@ def display_songs(query):
 # print("leeeeeeeeeel",search_for_track("artist:Selena Gomez track:Look At Her Now"))
 #print("leeeeeeeeeel",display_songs("artist:Selena Gomez track:Look At Her Now"))
 #print("leeeeeeeeeel",find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))
+search_for_track("artist:John Denver track:Take me home,country Roads")
