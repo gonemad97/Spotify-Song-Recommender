@@ -39,17 +39,23 @@ def pca_kmeans():
     PCA_components = pd.DataFrame(principalComponents)
 
     # Kmeans with 3 clusters based on elbow method but we choose 8 to get more varied results
-    model = KMeans(n_clusters=15)
+    model = KMeans(n_clusters=20)
     model.fit(PCA_components)
 
     # adding cluster and component columns to the dataset
     segm_kmeans = pd.concat([full_dataset.reset_index(drop=True)], axis=1)
 
     segm_kmeans["Segment KMeans PCA"] = model.labels_
-    segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"] \
+    # segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"] \
+    #     .map({0:"Cluster 1",1:"Cluster 2",2:"Cluster 3",3:"Cluster 4",4:"Cluster 5",5:"Cluster 6",
+    #           6:"Cluster 7",7:"Cluster 8",8: "Cluster 9",9: "Cluster 10", 10: "Cluster 11",
+    #           11: "Cluster 12",12: "Cluster 13", 13: "Cluster 14", 14: "Cluster 15"})
+    segm_kmeans["Segment"] = segm_kmeans["Segment KMeans PCA"]\
         .map({0:"Cluster 1",1:"Cluster 2",2:"Cluster 3",3:"Cluster 4",4:"Cluster 5",5:"Cluster 6",
               6:"Cluster 7",7:"Cluster 8",8: "Cluster 9",9: "Cluster 10", 10: "Cluster 11",
-              11: "Cluster 12",12: "Cluster 13", 13: "Cluster 14", 14: "Cluster 15"})
+              11: "Cluster 12",12: "Cluster 13", 13: "Cluster 14", 14: "Cluster 15",15:"Cluster 16",
+              16:"Cluster 17",17:"Cluster 18",18:"Cluster 19",19:"Cluster 20"})
+
 
     return pca, model, segm_kmeans
 
