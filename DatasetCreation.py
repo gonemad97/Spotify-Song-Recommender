@@ -94,8 +94,8 @@ def split_calc( tracks, noOfTracks):
     else:
         split_list = [100] * (noOfTracks / 100)
 
-    Inputt = iter(tracks)
-    Output = [list(islice(Inputt, elem))
+    Input = iter(tracks)
+    Output = [list(islice(Input, elem))
               for elem in split_list]
 
     return Output
