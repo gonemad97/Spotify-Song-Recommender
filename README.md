@@ -1,7 +1,7 @@
 # Spotify-Song-Recommender
 Song Recommendations using Spotify API
 
-###To Run the Application:
+### To Run the Application:
 
 There are two ways this application can be run.
 
@@ -27,4 +27,5 @@ Ensure you have Docker installed in your system. Then run the following commands
    * Run webapp.py
 
 
-To start using the application by using either of the two methods, go to http://0.0.0.0:5000/
+
+_To start using the application by using either of the two methods, go to http://0.0.0.0:5000/_
