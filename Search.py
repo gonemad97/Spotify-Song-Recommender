@@ -1,20 +1,16 @@
 import DatasetCreation as dc
 import Model as m
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 
 
 # search for a track and get all its audio features to compare with clusters
 def search_for_track(query):
     sp = dc.spotify_auth()
     result = sp.search(query)
-    # print(result)
-    # if song exists
+
     try:
         track_id = result["tracks"]["items"][0]["id"]
-        # track = sp.track(track_id)
-        # song_name = track["name"]
-        # artist_name = track["album"]["artists"][0]["name"]
+
 
         audio_features = sp.audio_features(tracks=[track_id])
         res = {key: audio_features[0][key] for key in
@@ -32,7 +28,8 @@ def search_for_track(query):
         new_track = []
         new_track.append(res)
         new_searched_song = pd.DataFrame(new_track)
-        pd.DataFrame(new_searched_song).to_pickle("./new_searched_track6.pkl")
+        pd.DataFrame(new_searched_song).to_pickle("./new_searched_track1.pkl")
+
         # to reorder features correctly
         searched_track = new_searched_song[['id',
                                             'name',
@@ -58,7 +55,7 @@ def search_for_track(query):
     except:
         return None
 
-
+#finds the cluster of the searched track and returns set of 30 songs similar to it
 def find_new_track_cluster_songs(query):
     try:
         pca, model, clustered_songs = m.pca_kmeans()
@@ -88,12 +85,7 @@ def display_songs(query):
     #if song doesn't exist
     except:
         return pd.DataFrame()
-    # song_list = find_new_track_cluster_songs(query).iloc[:, : 3]
-    # return song_list
 
-#print("looooooooool", search_for_track("artist:selena Gomz track:Look  Her Now"))
-#print("leeeeeeeeeel",find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))
-# print("leeeeeeeeeel",search_for_track("artist:Selena Gomez track:Look At Her Now"))
-#print("leeeeeeeeeel",display_songs("artist:Selena Gomez track:Look At Her Now"))
-#print("leeeeeeeeeel",find_new_track_cluster_songs("artist:Selena Gomez track:Look At Her Now"))
-search_for_track("artist:John Denver track:Take me home,country Roads")
+
+
+#search_for_track("artist:Selena Gomez track:Look At Her Now")
