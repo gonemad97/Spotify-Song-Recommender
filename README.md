@@ -26,7 +26,7 @@ Ensure you have Docker installed in your system. Then run the following commands
 
    * Run webapp.py
 
-_To start using the application by using either of the two methods, go to http://0.0.0.0:5000/_
+ _To start using the application by using either of the two methods, go to http://0.0.0.0:5000/_
    
    
 3. Docker pull:
