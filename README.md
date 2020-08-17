@@ -3,7 +3,7 @@ Song Recommendations using Spotify API
 
 ### To Run the Application:
 
-There are two ways this application can be run.
+There are three ways this application can be run.
 
 1. Use the Dockerfile:
 Ensure you have Docker installed in your system. Then run the following commands after cloning this repository onto your local machine:
@@ -26,6 +26,10 @@ Ensure you have Docker installed in your system. Then run the following commands
 
    * Run webapp.py
 
-
-
 _To start using the application by using either of the two methods, go to http://0.0.0.0:5000/_
+   
+   
+3. Docker pull:
+
+   * docker push palsmadhu/spotify-song-recommender:tagname
+
